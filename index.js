@@ -29,10 +29,24 @@ async function run() {
     const housesCollection = client.db("houseHunterDB").collection("houses");
 
     // Getting all houses data
-    // Users related API's
-    app.get("/hosues", async (req, res) => {
+    app.get("/houses", async (req, res) => {
       const result = await housesCollection.find().toArray();
       res.send(result);
+    });
+
+    // Getting room sizes data
+    app.get("/houses/:roomSize", async (req, res) => {
+      if (
+        req.params.roomSize == "Small" ||
+        req.params.roomSize == "Medium" ||
+        req.params.roomSize == "Large"
+      ) {
+        const cursor = housesCollection.find({
+          roomSize: req.params.roomSize,
+        });
+        const result = await cursor.toArray();
+        return res.send(result);
+      }
     });
 
     // Send a ping to confirm a successful connection
